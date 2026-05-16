@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+*.deb
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Local / build artifacts (keep source only in git)
+dist/winclip_*/
+dist/clipboard-manager_*/

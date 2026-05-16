@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clipboard-manager"
+version = "0.2.0"
+description = "Clipboard Manager — searchable clipboard history for Linux (GTK3)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Clipboard Manager" }]
+dependencies = []
+
+[project.scripts]
+clipboard-manager = "winclip.__main__:main"
+winclip = "winclip.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+winclip = ["py.typed"]

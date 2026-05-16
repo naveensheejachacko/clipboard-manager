@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Clipboard Manager
+Comment=Clipboard history background service
+Exec=clipboard-manager --tray
+Icon=edit-paste
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
