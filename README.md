@@ -38,15 +38,14 @@ Use a **Release** `.deb` — no need to clone the repo on your PC.
 
 ### 1. Download the latest release
 
-1. Open your repository on GitHub.
-2. Go to **Releases** → **Latest**.
-3. Download **`clipboard-manager_*_all.deb`** (for example `clipboard-manager_0.2.0_all.deb`).
+1. Open [clipboard-manager releases](https://github.com/naveensheejachacko/clipboard-manager/releases/latest).
+2. Download **`clipboard-manager_*_all.deb`** (for example `clipboard-manager_0.2.0_all.deb`).
 
-Or from a terminal (replace `YOUR_USER`, `YOUR_REPO`, and `VERSION`):
+Or from a terminal:
 
 ```bash
 cd ~/Downloads
-wget https://github.com/YOUR_USER/YOUR_REPO/releases/download/v0.2.0/clipboard-manager_0.2.0_all.deb
+wget https://github.com/naveensheejachacko/clipboard-manager/releases/download/v0.2.0/clipboard-manager_0.2.0_all.deb
 ```
 
 ### 2. Install the package
@@ -91,8 +90,8 @@ Logs: `~/.local/share/winclip/winclip.log`
 If you are uploading the app for others to download:
 
 ```bash
-git clone https://github.com/YOUR_USER/YOUR_REPO.git
-cd YOUR_REPO   # or linux-win-clip
+git clone https://github.com/naveensheejachacko/clipboard-manager.git
+cd clipboard-manager
 chmod +x scripts/build-deb.sh
 ./scripts/build-deb.sh
 ```
@@ -118,8 +117,8 @@ Users then follow [Install from GitHub](#install-from-github-recommended) above.
 ## Install from source (developers)
 
 ```bash
-git clone https://github.com/YOUR_USER/YOUR_REPO.git
-cd YOUR_REPO
+git clone https://github.com/naveensheejachacko/clipboard-manager.git
+cd clipboard-manager
 sudo apt install python3-gi gir1.2-gtk-3.0 gir1.2-gdkpixbuf-2.0 \
   gir1.2-ayatanaappindicator3-0.1 python3-pynput fakeroot
 chmod +x scripts/build-deb.sh
@@ -198,4 +197,3 @@ sudo apt install ./clipboard-manager_0.2.0_all.deb
 ## License
 
 [MIT](LICENSE)
-# clipboard-manager
