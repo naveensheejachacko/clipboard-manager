@@ -198,3 +198,4 @@ sudo apt install ./clipboard-manager_0.2.0_all.deb
 ## License
 
 [MIT](LICENSE)
+# clipboard-manager
