@@ -708,6 +708,7 @@ class MainWindow(Gtk.ApplicationWindow):
             entries = self._db.list_entries(limit=500)
         if not entries:
             row = Gtk.ListBoxRow()
+            style_widget(row, "winclip-empty-row")
             row.set_selectable(False)
             row.set_sensitive(False)
             if query:
@@ -735,6 +736,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
     def _make_row(self, entry: ClipEntry) -> Gtk.ListBoxRow:
         row = Gtk.ListBoxRow()
+        style_widget(row, "winclip-row")
         row.set_size_request(-1, _ROW_HEIGHT)
         setattr(row, "_winclip_id", entry.id)
 

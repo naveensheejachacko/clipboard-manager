@@ -5,23 +5,23 @@ import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 
-from gi.repository import Gdk, Gtk
+from gi.repository import Gtk
 
-# Windows 11–style dark clipboard panel (frosted overlay).
+# Solid dark panel — readable on any compositor / Mint theme (no see-through rows).
 _WINCLIP_CSS = """
 .winclip-window {
-  background-color: rgba(32, 32, 36, 0.90);
-  color: #f3f3f3;
-  border-radius: 10px;
+  background-color: #1e1e22;
+  color: #ececec;
 }
 
 .winclip-shell {
-  background-color: transparent;
+  background-color: #1e1e22;
 }
 
 .winclip-header {
-  background-color: transparent;
-  padding: 12px 14px 4px 14px;
+  background-color: #252528;
+  padding: 14px 16px 12px 16px;
+  border-bottom: 1px solid #3a3a40;
 }
 
 .winclip-title {
@@ -37,119 +37,153 @@ _WINCLIP_CSS = """
   padding: 6px;
   min-width: 32px;
   min-height: 32px;
+  color: #d8d8d8;
 }
 
 .winclip-toolbtn:hover {
-  background-color: rgba(255, 255, 255, 0.10);
+  background-color: #3a3a42;
 }
 
 .winclip-search {
-  margin: 4px 12px 8px 12px;
-  padding: 8px 12px;
+  margin: 10px 14px 8px 14px;
+  padding: 9px 12px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background-color: rgba(0, 0, 0, 0.25);
-  color: #f3f3f3;
+  border: 1px solid #45454d;
+  background-color: #2b2b30;
+  color: #f0f0f0;
+  caret-color: #60a5fa;
 }
 
 .winclip-search:focus {
-  border-color: rgba(96, 165, 250, 0.85);
+  border-color: #3b82f6;
+  background-color: #323238;
   box-shadow: none;
 }
 
 .winclip-scroll {
-  background-color: transparent;
+  background-color: #1e1e22;
   border: none;
 }
 
 .winclip-list {
-  background-color: transparent;
-  color: #f3f3f3;
+  background-color: #1e1e22;
+  color: #ececec;
 }
 
 .winclip-list row {
-  background-color: transparent;
-  border: none;
+  background-color: #2a2a2f;
+  border: 1px solid #38383f;
+  border-radius: 8px;
   padding: 0;
-  margin: 2px 8px;
+  margin: 5px 12px;
+  min-height: 58px;
+  transition: background-color 120ms ease-out;
 }
 
 .winclip-list row:hover {
-  background-color: rgba(255, 255, 255, 0.07);
+  background-color: #34343b;
+  border-color: #4a4a54;
 }
 
 .winclip-list row:selected {
-  background-color: rgba(0, 103, 192, 0.55);
+  background-color: #0b5cab;
+  border-color: #1d7ad4;
+}
+
+.winclip-list row:selected .winclip-item-title,
+.winclip-list row:selected .winclip-item-sub {
+  color: #ffffff;
 }
 
 .winclip-row-box {
   background-color: transparent;
+  padding: 8px 6px 8px 4px;
 }
 
 .winclip-item-title {
   font-size: 13px;
   font-weight: 500;
-  color: #f3f3f3;
+  color: #f2f2f2;
 }
 
 .winclip-item-sub {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.50);
+  color: #a8a8b0;
+  margin-top: 2px;
 }
 
 .winclip-pin {
   background-color: transparent;
   border: none;
   padding: 4px;
+  color: #c8c8d0;
 }
 
 .winclip-pin:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.12);
   border-radius: 6px;
 }
 
 .winclip-pin:checked {
-  color: #60a5fa;
+  color: #93c5fd;
+}
+
+.winclip-list row:selected .winclip-pin {
+  color: #e8f0ff;
 }
 
 .winclip-delete {
   background-color: transparent;
   border: none;
   padding: 4px;
-  opacity: 0.75;
+  color: #c8c8d0;
+  opacity: 0.9;
 }
 
 .winclip-delete:hover {
-  background-color: rgba(255, 80, 80, 0.25);
+  background-color: rgba(220, 60, 60, 0.35);
   border-radius: 6px;
+  color: #ffffff;
   opacity: 1;
 }
 
 .winclip-footer {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.40);
-  padding: 6px 14px 10px 14px;
+  color: #8a8a94;
+  padding: 8px 14px 12px 14px;
+  background-color: #252528;
+  border-top: 1px solid #3a3a40;
 }
 
 .winclip-empty {
-  color: rgba(255, 255, 255, 0.55);
+  color: #9a9aa4;
   font-size: 13px;
+  padding: 24px 16px;
+}
+
+.winclip-list row.winclip-empty-row {
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  min-height: 0;
 }
 """
 
 
-def configure_transparent_window(window: Gtk.Window) -> None:
-    screen = window.get_screen()
-    if screen is None:
+def _prefer_dark_gtk_theme() -> None:
+    settings = Gtk.Settings.get_default()
+    if settings is None:
         return
-    visual = screen.get_rgba_visual()
-    if visual is not None and screen.is_composited():
-        window.set_visual(visual)
-    window.set_app_paintable(True)
+    if hasattr(settings, "set_property"):
+        try:
+            settings.set_property("gtk-application-prefer-dark-theme", True)
+        except (TypeError, AttributeError):
+            pass
 
 
 def apply_winclip_theme(window: Gtk.Window) -> None:
-    configure_transparent_window(window)
+    """Apply opaque dark theme; avoids RGBA window so list text stays readable."""
+    _prefer_dark_gtk_theme()
     provider = Gtk.CssProvider()
     provider.load_from_data(_WINCLIP_CSS.encode("utf-8"))
     Gtk.StyleContext.add_provider(

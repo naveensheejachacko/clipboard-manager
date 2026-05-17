@@ -13,7 +13,7 @@ Lightweight **clipboard history** for **Linux Mint, Ubuntu, and Debian**. Search
 - **Pin** items so they are not rotated out
 - **Tray icon** — closing the window keeps the app running
 - Optional **global shortcut** (`clipboard-manager --toggle`)
-- Dark, semi-transparent UI inspired by Windows 11 clipboard history
+- Dark, readable UI inspired by Windows 11 clipboard history
 
 ## Requirements
 
@@ -183,8 +183,8 @@ sudo apt install gir1.2-ayatanaappindicator3-0.1
 **Shortcut stops after closing terminal**  
 Start with `clipboard-manager --tray` (not plain `clipboard-manager` in a terminal you close), or enable **Startup Applications**.
 
-**Transparency looks solid**  
-Normal without a compositor; the dark theme still applies.
+**UI looks wrong after an update**  
+Quit fully from the tray, then start again with `clipboard-manager --tray`.
 
 **Upgrading from old `winclip` package**  
 ```bash
