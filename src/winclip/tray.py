@@ -9,18 +9,13 @@ gi.require_version("Gtk", "3.0")
 
 from gi.repository import Gtk
 
-from winclip.branding import APP_COMMAND, APP_DISPLAY_NAME
-from winclip.hotkey_util import theme_icon_name
+from winclip.branding import APP_DISPLAY_NAME
+from winclip.icons import TRAY_ICON_NAME, load_pixbuf, tray_icon_available
 
 if TYPE_CHECKING:
     from winclip.app import WinclipApplication
 
 LOG = logging.getLogger(__name__)
-
-_TRAY_ICON = theme_icon_name(
-    ["edit-paste-symbolic", "edit-paste", "clipboard-symbolic"],
-    "edit-paste",
-)
 
 
 class TrayIcon:
@@ -66,9 +61,10 @@ class TrayIcon:
                 return False
 
         try:
+            icon_name = TRAY_ICON_NAME if tray_icon_available() else "edit-paste-symbolic"
             ind = AppIndicator.Indicator.new(
                 "clipboard-manager",
-                _TRAY_ICON,
+                icon_name,
                 AppIndicator.IndicatorCategory.APPLICATION_STATUS,
             )
             ind.set_status(AppIndicator.IndicatorStatus.ACTIVE)
@@ -83,7 +79,13 @@ class TrayIcon:
 
     def _try_status_icon(self) -> None:
         try:
-            icon = Gtk.StatusIcon.new_from_icon_name(_TRAY_ICON, Gtk.IconSize.MENU)
+            pb = load_pixbuf(TRAY_ICON_NAME, 22)
+            if pb is not None:
+                icon = Gtk.StatusIcon.new_from_pixbuf(pb)
+            else:
+                icon = Gtk.StatusIcon.new_from_icon_name(
+                    TRAY_ICON_NAME, Gtk.IconSize.MENU
+                )
             icon.set_tooltip_text(f"{APP_DISPLAY_NAME} — click to show history")
             icon.connect("activate", self._on_status_activate)
             icon.connect("popup-menu", self._on_status_popup)

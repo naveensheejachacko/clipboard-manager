@@ -28,6 +28,7 @@ from winclip.hotkey_util import (
 from winclip.paths import app_images_dir, db_path, ipc_socket_path
 from winclip.settings import AppSettings
 from winclip.tray import TrayIcon
+from winclip.icons import apply_window_icon, register_icon_theme_paths
 from winclip.ui_style import apply_winclip_theme, style_widget
 
 LOG = logging.getLogger(__name__)
@@ -142,6 +143,7 @@ class WinclipApplication(Gtk.Application):
 
     def do_startup(self) -> None:
         Gtk.Application.do_startup(self)
+        register_icon_theme_paths()
         self._start_ipc_server()
         self._tray = TrayIcon(self)
         self.hold()
@@ -587,6 +589,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.set_border_width(0)
         self.connect("delete-event", self._on_delete_event)
         apply_winclip_theme(self)
+        apply_window_icon(self)
         self._db = db
         self._settings = settings
         self._on_settings_changed = on_settings_changed

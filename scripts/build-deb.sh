@@ -13,6 +13,10 @@ mkdir -p "${STAGE}/usr/lib/python3/dist-packages"
 mkdir -p "${STAGE}/usr/bin"
 mkdir -p "${STAGE}/usr/share/applications"
 mkdir -p "${STAGE}/etc/xdg/autostart"
+mkdir -p "${STAGE}/usr/share/icons/hicolor/scalable/apps"
+mkdir -p "${STAGE}/usr/share/icons/hicolor/symbolic/status"
+mkdir -p "${STAGE}/usr/lib/python3/dist-packages/winclip/data/icons/hicolor/scalable/apps"
+mkdir -p "${STAGE}/usr/lib/python3/dist-packages/winclip/data/icons/hicolor/symbolic/status"
 
 cp -a "${ROOT}/src/winclip" "${STAGE}/usr/lib/python3/dist-packages/"
 rm -rf "${STAGE}/usr/lib/python3/dist-packages/winclip/__pycache__"
@@ -29,6 +33,16 @@ cp "${ROOT}/resources/clipboard-manager.desktop" \
   "${STAGE}/usr/share/applications/clipboard-manager.desktop"
 cp "${ROOT}/resources/clipboard-manager-autostart.desktop" \
   "${STAGE}/etc/xdg/autostart/clipboard-manager.desktop"
+
+ICON_SRC="${ROOT}/resources/icons/hicolor"
+cp "${ICON_SRC}/scalable/apps/clipboard-manager.svg" \
+  "${STAGE}/usr/share/icons/hicolor/scalable/apps/clipboard-manager.svg"
+cp "${ICON_SRC}/symbolic/status/clipboard-manager-symbolic.svg" \
+  "${STAGE}/usr/share/icons/hicolor/symbolic/status/clipboard-manager-symbolic.svg"
+cp "${ICON_SRC}/scalable/apps/clipboard-manager.svg" \
+  "${STAGE}/usr/lib/python3/dist-packages/winclip/data/icons/hicolor/scalable/apps/clipboard-manager.svg"
+cp "${ICON_SRC}/symbolic/status/clipboard-manager-symbolic.svg" \
+  "${STAGE}/usr/lib/python3/dist-packages/winclip/data/icons/hicolor/symbolic/status/clipboard-manager-symbolic.svg"
 
 cat >"${CTRL}" <<EOF
 Package: clipboard-manager
@@ -59,6 +73,9 @@ case "$1" in
     if command -v update-desktop-database >/dev/null 2>&1; then
       update-desktop-database /usr/share/applications >/dev/null 2>&1 || true
     fi
+    if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+      gtk-update-icon-cache -f /usr/share/icons/hicolor >/dev/null 2>&1 || true
+    fi
     ;;
 esac
 exit 0
@@ -71,6 +88,9 @@ case "$1" in
   remove|purge|abort-install|abort-upgrade)
     if command -v update-desktop-database >/dev/null 2>&1; then
       update-desktop-database /usr/share/applications >/dev/null 2>&1 || true
+    fi
+    if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+      gtk-update-icon-cache -f /usr/share/icons/hicolor >/dev/null 2>&1 || true
     fi
     ;;
 esac
